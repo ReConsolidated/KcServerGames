@@ -1,0 +1,11 @@
+name: KcServerGames
+version: '${project.version}'
+main: io.github.reconsolidated.kcservergames.KcServerGames
+api-version: 1.17
+authors: [ KcAnka ]
+commands:
+  woolswap:
+    description: Related to woolswap game
+    usage: /woolswap
+    aliases: [ ws ]
+    permission: woolswap.use
