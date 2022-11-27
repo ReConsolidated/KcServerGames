@@ -32,6 +32,9 @@ public class WoolSwapArena implements ConfigurationSerializable {
     private Region colorDisplayRegion;
     @Getter
     @Setter
+    private Region entranceRegion;
+    @Getter
+    @Setter
     private int minPlayers = 1;
 
     // NOT SERIALIZABLE
@@ -63,6 +66,7 @@ public class WoolSwapArena implements ConfigurationSerializable {
         result.put("woolRegion", woolRegion);
         result.put("entireRegion", entireRegion);
         result.put("colorDisplayRegion", colorDisplayRegion);
+        result.put("entranceRegion", entranceRegion);
         result.put("minPlayers", minPlayers);
         return result;
     }
@@ -74,6 +78,7 @@ public class WoolSwapArena implements ConfigurationSerializable {
         result.woolRegion = (Region) args.get("woolRegion");
         result.entireRegion = (Region) args.get("entireRegion");
         result.colorDisplayRegion = (Region) args.get("colorDisplayRegion");
+        result.entranceRegion = (Region) args.get("entranceRegion");
         result.minPlayers = (Integer) args.get("minPlayers");
         return result;
     }
@@ -111,7 +116,7 @@ public class WoolSwapArena implements ConfigurationSerializable {
     }
 
     public boolean isReady() {
-        return playRegion != null && woolRegion != null && entireRegion != null && colorDisplayRegion != null;
+        return playRegion != null && woolRegion != null && entireRegion != null && colorDisplayRegion != null && entranceRegion != null;
     }
 
     public void setMusicPlayer(SongPlayer player) {

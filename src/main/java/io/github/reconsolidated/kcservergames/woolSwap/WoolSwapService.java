@@ -30,6 +30,7 @@ public class WoolSwapService {
         for (WoolSwapArena arena : repository.getAll()) {
             if (arena.isReady()) {
                 setAllColors(arena);
+                openEntrance(arena);
                 Location musicLocation = arena.getWoolRegion().getCenterLocation();
                 arena.setMusicPlayer(musicService.createPlayer(musicLocation, 20));
             }
@@ -43,6 +44,8 @@ public class WoolSwapService {
             }
         }, 0L, 10L);
     }
+
+
 
 
     private void tick(WoolSwapArena arena) {
@@ -60,6 +63,7 @@ public class WoolSwapService {
                 startArena(arena);
                 setRemainingRunTime(arena);
                 displayColor(arena);
+                closeEntrance(arena);
                 arena.setState(WoolSwapGameState.IN_PROGRESS_RUN);
             } else {
                 log.info("Remaining count time is %d, doing the counting.".formatted(arena.getRemainingCountTime()));
@@ -70,6 +74,7 @@ public class WoolSwapService {
             if (countPlayers(arena) == 0) {
                 arena.setState(WoolSwapGameState.WAITING_FOR_PLAYERS);
                 setAllColors(arena);
+                openEntrance(arena);
                 return;
             }
             if (arena.getState() == WoolSwapGameState.IN_PROGRESS_RUN) {
@@ -93,6 +98,14 @@ public class WoolSwapService {
                 }
             }
         }
+    }
+
+    private void openEntrance(WoolSwapArena arena) {
+        arena.getEntranceRegion().getBlocks().forEach(block -> block.setType(Material.AIR));
+    }
+
+    private void closeEntrance(WoolSwapArena arena) {
+        arena.getEntranceRegion().getBlocks().forEach(block -> block.setType(Material.RED_STAINED_GLASS));
     }
 
     private void displayColor(WoolSwapArena arena) {

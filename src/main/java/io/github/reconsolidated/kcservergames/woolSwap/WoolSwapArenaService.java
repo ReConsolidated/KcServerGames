@@ -48,7 +48,11 @@ public class WoolSwapArenaService {
         }
         else if (regionType.equalsIgnoreCase("display")) {
             arena.setColorDisplayRegion(new Region(locationsPicked.first, locationsPicked.second));
-        } else {
+        }
+        else if (regionType.equalsIgnoreCase("entrance")) {
+            arena.setEntranceRegion(new Region(locationsPicked.first, locationsPicked.second));
+        }
+        else {
             throw new InformException("Invalid region type. Allowed types: entire, play, wool, display");
         }
         woolSwapArenaRepository.save(arena.getName(), arena);

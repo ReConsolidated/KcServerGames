@@ -36,7 +36,7 @@ public class WoolSwapSetRegionCommand implements SubCommand {
         if (args.length == 3) {
             String arenaName = args[1];
             String regionType = args[2];
-            List<String> allowedRegionTypes = List.of("entire", "play", "wool", "display");
+            List<String> allowedRegionTypes = List.of("entire", "play", "wool", "display", "entrance");
             if (allowedRegionTypes.contains(regionType.toLowerCase())) {
                 woolSwapArenaService.setRegion((Player) sender, arenaName, regionType);
                 sender.sendMessage(ChatColor.GREEN + "Region %s set!".formatted(regionType));

@@ -3,6 +3,7 @@ version: '${project.version}'
 main: io.github.reconsolidated.kcservergames.KcServerGames
 api-version: 1.17
 authors: [ KcAnka ]
+depend: [ NoteBlockAPI ]
 commands:
   woolswap:
     description: Related to woolswap game
