@@ -1,6 +1,7 @@
 package io.github.reconsolidated.kcservergames;
 
-import io.github.reconsolidated.kcservergames.Utils.Translations;
+import io.github.reconsolidated.kcservergames.music.MusicService;
+import io.github.reconsolidated.kcservergames.utils.Translations;
 import io.github.reconsolidated.kcservergames.regions.Region;
 import io.github.reconsolidated.kcservergames.woolSwap.WoolSwapArena;
 import io.github.reconsolidated.kcservergames.woolSwap.WoolSwapArenaRepository;
@@ -15,6 +16,7 @@ public final class KcServerGames extends JavaPlugin {
     @Getter
     private static KcServerGames instance;
 
+    private MusicService musicService;
     private WoolSwapArenaRepository woolSwapArenaRepository;
     private WoolSwapService woolSwapService;
     private WoolSwapArenaService woolSwapArenaService;
@@ -31,8 +33,9 @@ public final class KcServerGames extends JavaPlugin {
         Translations.createDefaultTranslationsFile();
         Translations.loadTranslations();
 
+        musicService = new MusicService();
         woolSwapArenaRepository = new WoolSwapArenaRepository();
-        woolSwapService = new WoolSwapService(woolSwapArenaRepository);
+        woolSwapService = new WoolSwapService(woolSwapArenaRepository, musicService);
         woolSwapArenaService = new WoolSwapArenaService(woolSwapArenaRepository);
         WoolSwapCommand woolSwapCommand = new WoolSwapCommand(woolSwapArenaService);
         getCommand("woolswap").setExecutor(woolSwapCommand);

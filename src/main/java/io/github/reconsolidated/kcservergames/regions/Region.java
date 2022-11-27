@@ -83,4 +83,13 @@ public class Region implements ConfigurationSerializable {
                 "\n    min=%d, %d, %d".formatted(min.getBlockX(), min.getBlockY(), min.getBlockZ()) +
                 "\n    max=%d, %d, %d".formatted(max.getBlockX(), max.getBlockY(), max.getBlockZ());
     }
+
+    public Location getCenterLocation() {
+        return new Location(
+                Bukkit.getWorld(worldName),
+                (min.getBlockX() + max.getBlockX()) / 2.0,
+                (min.getBlockY() + max.getBlockY()) / 2.0,
+                (min.getBlockZ() + max.getBlockZ()) / 2.0
+        );
+    }
 }

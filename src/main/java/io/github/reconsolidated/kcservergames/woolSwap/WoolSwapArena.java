@@ -1,5 +1,6 @@
 package io.github.reconsolidated.kcservergames.woolSwap;
 
+import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import io.github.reconsolidated.kcservergames.regions.Region;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,9 @@ public class WoolSwapArena implements ConfigurationSerializable {
     private Region entireRegion;
     @Getter
     @Setter
+    private Region colorDisplayRegion;
+    @Getter
+    @Setter
     private int minPlayers = 1;
 
     // NOT SERIALIZABLE
@@ -42,6 +46,8 @@ public class WoolSwapArena implements ConfigurationSerializable {
     @Getter
     @Setter
     private WoolSwapColor color = WoolSwapColor.BLUE;
+    @Getter
+    private SongPlayer songPlayer = null;
 
 
     public WoolSwapArena(String name) {
@@ -56,6 +62,7 @@ public class WoolSwapArena implements ConfigurationSerializable {
         result.put("playRegion", playRegion);
         result.put("woolRegion", woolRegion);
         result.put("entireRegion", entireRegion);
+        result.put("colorDisplayRegion", colorDisplayRegion);
         result.put("minPlayers", minPlayers);
         return result;
     }
@@ -66,6 +73,7 @@ public class WoolSwapArena implements ConfigurationSerializable {
         result.playRegion = (Region) args.get("playRegion");
         result.woolRegion = (Region) args.get("woolRegion");
         result.entireRegion = (Region) args.get("entireRegion");
+        result.colorDisplayRegion = (Region) args.get("colorDisplayRegion");
         result.minPlayers = (Integer) args.get("minPlayers");
         return result;
     }
@@ -103,6 +111,10 @@ public class WoolSwapArena implements ConfigurationSerializable {
     }
 
     public boolean isReady() {
-        return playRegion != null && woolRegion != null && entireRegion != null;
+        return playRegion != null && woolRegion != null && entireRegion != null && colorDisplayRegion != null;
+    }
+
+    public void setMusicPlayer(SongPlayer player) {
+        this.songPlayer = player;
     }
 }

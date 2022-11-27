@@ -1,4 +1,4 @@
-package io.github.reconsolidated.kcservergames.Utils;
+package io.github.reconsolidated.kcservergames.utils;
 
 import org.bukkit.Location;
 

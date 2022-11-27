@@ -1,4 +1,4 @@
-package io.github.reconsolidated.kcservergames.Utils;
+package io.github.reconsolidated.kcservergames.utils;
 
 import io.github.reconsolidated.kcservergames.KcServerGames;
 import io.github.reconsolidated.kcservergames.configUtils.CustomConfig;
@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
 
-import static io.github.reconsolidated.kcservergames.Utils.Tr.tr;
+import static io.github.reconsolidated.kcservergames.utils.Tr.tr;
 
 public class Translations {
     public static String WHITE = "&fWHITE";

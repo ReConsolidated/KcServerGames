@@ -1,6 +1,6 @@
 package io.github.reconsolidated.kcservergames.woolSwap;
 
-import io.github.reconsolidated.kcservergames.Utils.LocationsPicked;
+import io.github.reconsolidated.kcservergames.utils.LocationsPicked;
 import io.github.reconsolidated.kcservergames.commandManagement.InformException;
 import io.github.reconsolidated.kcservergames.regions.Region;
 import org.bukkit.entity.Player;
@@ -45,8 +45,11 @@ public class WoolSwapArenaService {
         }
         else if (regionType.equalsIgnoreCase("wool")) {
             arena.setWoolRegion(new Region(locationsPicked.first, locationsPicked.second));
+        }
+        else if (regionType.equalsIgnoreCase("display")) {
+            arena.setColorDisplayRegion(new Region(locationsPicked.first, locationsPicked.second));
         } else {
-            throw new InformException("Invalid region type. Allowed types: entire, play, wool");
+            throw new InformException("Invalid region type. Allowed types: entire, play, wool, display");
         }
         woolSwapArenaRepository.save(arena.getName(), arena);
     }

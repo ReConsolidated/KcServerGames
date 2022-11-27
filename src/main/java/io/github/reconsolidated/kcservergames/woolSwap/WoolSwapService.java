@@ -1,10 +1,13 @@
 package io.github.reconsolidated.kcservergames.woolSwap;
 
 import io.github.reconsolidated.kcservergames.KcServerGames;
-import io.github.reconsolidated.kcservergames.Utils.Translations;
+import io.github.reconsolidated.kcservergames.music.MusicService;
+import io.github.reconsolidated.kcservergames.regions.Region;
+import io.github.reconsolidated.kcservergames.utils.Translations;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,9 +21,19 @@ import java.util.logging.Logger;
 public class WoolSwapService {
     private final Logger log = Bukkit.getLogger();
     private final WoolSwapArenaRepository repository;
+    private final MusicService musicService;
 
-    public WoolSwapService(WoolSwapArenaRepository woolSwapArenaRepository) {
+    public WoolSwapService(WoolSwapArenaRepository woolSwapArenaRepository, MusicService musicService) {
         this.repository = woolSwapArenaRepository;
+        this.musicService = musicService;
+
+        for (WoolSwapArena arena : repository.getAll()) {
+            if (arena.isReady()) {
+                setAllColors(arena);
+                Location musicLocation = arena.getWoolRegion().getCenterLocation();
+                arena.setMusicPlayer(musicService.createPlayer(musicLocation, 20));
+            }
+        }
 
         Bukkit.getScheduler().runTaskTimer(KcServerGames.getInstance(), () -> {
             for (WoolSwapArena arena : repository.getAll()) {
@@ -31,13 +44,14 @@ public class WoolSwapService {
         }, 0L, 10L);
     }
 
+
     private void tick(WoolSwapArena arena) {
         if (arena.getState() == WoolSwapGameState.WAITING_FOR_PLAYERS) {
+            playMusic(arena);
             int players = countPlayers(arena);
             if (players >= arena.getMinPlayers()) {
                 setRemainingCountTime(arena);
                 arena.setState(WoolSwapGameState.COUNTING);
-                setAllColors(arena);
             }
         }
         else if (arena.getState() == WoolSwapGameState.COUNTING) {
@@ -45,6 +59,7 @@ public class WoolSwapService {
                 log.info("Remaining count time is less than 0, starting the arena.");
                 startArena(arena);
                 setRemainingRunTime(arena);
+                displayColor(arena);
                 arena.setState(WoolSwapGameState.IN_PROGRESS_RUN);
             } else {
                 log.info("Remaining count time is %d, doing the counting.".formatted(arena.getRemainingCountTime()));
@@ -54,9 +69,11 @@ public class WoolSwapService {
         else {
             if (countPlayers(arena) == 0) {
                 arena.setState(WoolSwapGameState.WAITING_FOR_PLAYERS);
+                setAllColors(arena);
                 return;
             }
             if (arena.getState() == WoolSwapGameState.IN_PROGRESS_RUN) {
+                playMusic(arena);
                 if (arena.getRemainingRunTime() < 0) {
                     clearInfo(arena);
                     setOnlyOneColor(arena);
@@ -66,13 +83,35 @@ public class WoolSwapService {
                     sendColorInfo(arena);
                 }
             } else {
+                stopMusic(arena);
                 if (arena.getRemainingStandTime() < 0) {
                     setAllColors(arena);
                     incrementLevel(arena);
                     setRemainingRunTime(arena);
+                    displayColor(arena);
                     arena.setState(WoolSwapGameState.IN_PROGRESS_RUN);
                 }
             }
+        }
+    }
+
+    private void displayColor(WoolSwapArena arena) {
+        arena.getColorDisplayRegion().getBlocks().forEach(block -> {
+            block.setType(arena.getColor().getMaterial());
+        });
+    }
+
+    private void stopMusic(WoolSwapArena arena) {
+        if (arena.getSongPlayer() == null) return;
+        if (arena.getSongPlayer().isPlaying()) {
+            arena.getSongPlayer().setPlaying(false);
+        }
+    }
+
+    private void playMusic(WoolSwapArena arena) {
+        if (arena.getSongPlayer() == null) return;
+        if (!arena.getSongPlayer().isPlaying()) {
+            arena.getSongPlayer().setPlaying(true);
         }
     }
 
