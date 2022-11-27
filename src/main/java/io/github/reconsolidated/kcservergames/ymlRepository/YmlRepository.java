@@ -24,7 +24,7 @@ public class YmlRepository<T extends ConfigurationSerializable> {
     }
 
     public Optional<T> findById(String id) {
-        return Optional.of(storage.get(id));
+        return Optional.ofNullable(storage.get(id));
     }
 
     public void save(String id, T item) {

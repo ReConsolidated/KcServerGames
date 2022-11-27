@@ -25,6 +25,9 @@ public final class KcServerGames extends JavaPlugin {
         ConfigurationSerialization.registerClass(Region.class);
         ConfigurationSerialization.registerClass(WoolSwapArena.class);
 
+        getConfig().set("version", "1.0.0");
+        saveConfig();
+
         Translations.createDefaultTranslationsFile();
         Translations.loadTranslations();
 

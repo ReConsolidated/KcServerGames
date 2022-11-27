@@ -9,5 +9,7 @@ public class WoolSwapCommand extends CommandManager {
 
         addSubCommand(new WoolSwapCreateCommand(woolSwapArenaService));
         addSubCommand(new WoolSwapLocCommand(woolSwapArenaService));
+        addSubCommand(new WoolSwapSetRegionCommand(woolSwapArenaService));
+        addSubCommand(new WoolSwapInfoCommand(woolSwapArenaService));
     }
 }

@@ -13,8 +13,10 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class WoolSwapService {
+    private final Logger log = Bukkit.getLogger();
     private final WoolSwapArenaRepository repository;
 
     public WoolSwapService(WoolSwapArenaRepository woolSwapArenaRepository) {
@@ -22,7 +24,9 @@ public class WoolSwapService {
 
         Bukkit.getScheduler().runTaskTimer(KcServerGames.getInstance(), () -> {
             for (WoolSwapArena arena : repository.getAll()) {
-                tick(arena);
+                if (arena.isReady()) {
+                    tick(arena);
+                }
             }
         }, 0L, 10L);
     }
@@ -33,28 +37,33 @@ public class WoolSwapService {
             if (players >= arena.getMinPlayers()) {
                 setRemainingCountTime(arena);
                 arena.setState(WoolSwapGameState.COUNTING);
+                setAllColors(arena);
             }
         }
         else if (arena.getState() == WoolSwapGameState.COUNTING) {
             if (arena.getRemainingCountTime() < 0) {
+                log.info("Remaining count time is less than 0, starting the arena.");
                 startArena(arena);
+                setRemainingRunTime(arena);
                 arena.setState(WoolSwapGameState.IN_PROGRESS_RUN);
             } else {
+                log.info("Remaining count time is %d, doing the counting.".formatted(arena.getRemainingCountTime()));
                 doCounting(arena);
             }
         }
         else {
-            int players = countPlayers(arena);
-            if (players == 0) {
-                resetArena(arena);
+            if (countPlayers(arena) == 0) {
                 arena.setState(WoolSwapGameState.WAITING_FOR_PLAYERS);
                 return;
             }
             if (arena.getState() == WoolSwapGameState.IN_PROGRESS_RUN) {
                 if (arena.getRemainingRunTime() < 0) {
+                    clearInfo(arena);
                     setOnlyOneColor(arena);
                     setRemainingStandTime(arena);
                     arena.setState(WoolSwapGameState.IN_PROGRESS_FALL);
+                } else {
+                    sendColorInfo(arena);
                 }
             } else {
                 if (arena.getRemainingStandTime() < 0) {
@@ -63,6 +72,35 @@ public class WoolSwapService {
                     setRemainingRunTime(arena);
                     arena.setState(WoolSwapGameState.IN_PROGRESS_RUN);
                 }
+            }
+        }
+    }
+
+    private void clearInfo(WoolSwapArena arena) {
+        for (Player player : getPlayersInArena(arena)) {
+            player.showTitle(Title.title(Component.text(" "), Component.empty()));
+        }
+    }
+
+    private void sendColorInfo(WoolSwapArena arena) {
+        for (Player player : getPlayersInArena(arena)) {
+            switch (arena.getColor()) {
+                case WHITE -> player.showTitle(Title.title(Component.text(Translations.WHITE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case ORANGE -> player.showTitle(Title.title(Component.text(Translations.ORANGE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case MAGENTA -> player.showTitle(Title.title(Component.text(Translations.MAGENTA), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case LIGHT_BLUE -> player.showTitle(Title.title(Component.text(Translations.LIGHT_BLUE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case YELLOW -> player.showTitle(Title.title(Component.text(Translations.YELLOW), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case LIME -> player.showTitle(Title.title(Component.text(Translations.LIME), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case PINK -> player.showTitle(Title.title(Component.text(Translations.PINK), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case GRAY -> player.showTitle(Title.title(Component.text(Translations.GRAY), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case LIGHT_GRAY -> player.showTitle(Title.title(Component.text(Translations.LIGHT_GRAY), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case CYAN -> player.showTitle(Title.title(Component.text(Translations.CYAN), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case PURPLE -> player.showTitle(Title.title(Component.text(Translations.PURPLE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case BLUE -> player.showTitle(Title.title(Component.text(Translations.BLUE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case BROWN -> player.showTitle(Title.title(Component.text(Translations.BROWN), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case GREEN -> player.showTitle(Title.title(Component.text(Translations.GREEN), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case RED -> player.showTitle(Title.title(Component.text(Translations.RED), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case BLACK -> player.showTitle(Title.title(Component.text(Translations.BLACK), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
             }
         }
     }
@@ -90,7 +128,7 @@ public class WoolSwapService {
         int startingTime = 10000;
         int minimalTime = 700;
 
-        int currentTime = minimalTime + (int) (1-Math.tanh(arena.getLevel()-1)) * (startingTime-minimalTime);
+        int currentTime = minimalTime + startingTime * (Math.max(1, 10-arena.getLevel()))/10;
         arena.setRemainingRunTime(currentTime);
     }
 
@@ -99,6 +137,7 @@ public class WoolSwapService {
     }
 
     private void startArena(WoolSwapArena arena) {
+        log.info("Starting arena " + arena.getName());
         pickNextColor(arena);
         getPlayersInArena(arena).forEach((player) -> {
             player.showTitle(Title.title(

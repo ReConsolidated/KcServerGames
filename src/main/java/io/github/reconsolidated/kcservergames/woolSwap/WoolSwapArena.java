@@ -15,15 +15,20 @@ import java.util.Map;
 @NoArgsConstructor
 public class WoolSwapArena implements ConfigurationSerializable {
     // SERIALIZABLE
+    @Getter
     private String name;
     @Getter
+    @Setter
     private Region playRegion;
     @Getter
+    @Setter
     private Region woolRegion;
     @Getter
+    @Setter
     private Region entireRegion;
     @Getter
-    private int minPlayers;
+    @Setter
+    private int minPlayers = 1;
 
     // NOT SERIALIZABLE
     @Getter
@@ -97,4 +102,7 @@ public class WoolSwapArena implements ConfigurationSerializable {
         return standFinishTime - System.currentTimeMillis();
     }
 
+    public boolean isReady() {
+        return playRegion != null && woolRegion != null && entireRegion != null;
+    }
 }

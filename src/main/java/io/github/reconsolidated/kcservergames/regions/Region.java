@@ -1,6 +1,5 @@
 package io.github.reconsolidated.kcservergames.regions;
 
-import io.github.reconsolidated.kcservergames.configUtils.SerializableLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,64 +13,60 @@ import java.util.*;
 
 @SerializableAs("Region")
 public class Region implements ConfigurationSerializable {
-    private final String name;
-    private final UUID worldUID;
-    private Vector loc1;
-    private Vector loc2;
+    private final String worldName;
+    private final Vector min;
+    private final Vector max;
 
     // NOT SERIALIZED!!! SET FOR OPTIMIZATION
     private List<Block> blocks = null;
 
-    public Region(String name, Location loc1, Location loc2) {
-        this.name = name;
-        this.worldUID = loc1.getWorld().getUID();
+    public Region(@NotNull Location loc1,@NotNull Location loc2) {
+        this.worldName = loc1.getWorld().getName();
         if (!loc1.getWorld().getUID().equals(loc2.getWorld().getUID())) {
             throw new IllegalArgumentException("Locations must be in the same world");
         }
-        this.loc1 = loc1.toVector();
-        this.loc2 = loc2.toVector();
+        this.min = Vector.getMinimum(loc1.toVector(), loc2.toVector());
+        this.max = Vector.getMaximum(loc1.toVector(), loc2.toVector());
     }
 
-    private Region(String name, UUID worldUID, Vector loc1, Vector loc2) {
-        this.name = name;
-        this.worldUID = worldUID;
-        this.loc1 = loc1;
-        this.loc2 = loc2;
+    private Region(String worldName, Vector loc1, Vector loc2) {
+        this.worldName = worldName;
+        this.min = Vector.getMinimum(loc1, loc2);
+        this.max = Vector.getMaximum(loc1, loc2);
     }
 
     public boolean isInRegion(Location location) {
-        if (location.getWorld().getUID() != worldUID) {
+        if (!location.getWorld().getName().equals(worldName)) {
             return false;
         }
         Vector pos = location.toVector();
-        return pos.isInAABB(loc1, loc2);
+        return pos.isInAABB(min, max);
     }
 
     @Override
     public @NotNull Map<String, Object> serialize() {
         Map<String, Object> result = new HashMap<>();
-        result.put("name", name);
-        result.put("worldUID", worldUID.toString());
-        result.put("loc1", loc1);
-        result.put("loc2", loc2);
+        result.put("worldName", worldName);
+        result.put("min", min);
+        result.put("max", max);
         return result;
     }
 
     public static Region deserialize(Map<String, Object> map) {
         return new Region(
-                (String) map.get("name"),
-                UUID.fromString((String) map.get("worldUID")),
-                (Vector) map.get("loc1"),
-                (Vector) map.get("loc2")
+                (String) map.get("worldName"),
+                (Vector) map.get("min"),
+                (Vector) map.get("max")
         );
     }
 
     public List<Block> getBlocks() {
         if (blocks == null) {
-            World world = Bukkit.getWorld(worldUID);
-            for (int x = loc1.getBlockX(); x <= loc2.getBlockX(); x++) {
-                for (int y = loc1.getBlockY(); y <= loc2.getBlockY(); y++) {
-                    for (int z = loc1.getBlockZ(); z <= loc2.getBlockZ(); z++) {
+            blocks = new ArrayList<>();
+            World world = Bukkit.getWorld(worldName);
+            for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                    for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
                         Location location = new Location(world, x, y, z);
                         blocks.add(location.getBlock());
                     }
@@ -79,5 +74,13 @@ public class Region implements ConfigurationSerializable {
             }
         }
         return blocks;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "\n    worldName=" + worldName +
+                "\n    min=%d, %d, %d".formatted(min.getBlockX(), min.getBlockY(), min.getBlockZ()) +
+                "\n    max=%d, %d, %d".formatted(max.getBlockX(), max.getBlockY(), max.getBlockZ());
     }
 }
