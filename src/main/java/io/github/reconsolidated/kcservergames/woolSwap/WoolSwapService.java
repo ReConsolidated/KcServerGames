@@ -45,9 +45,6 @@ public class WoolSwapService {
         }, 0L, 10L);
     }
 
-
-
-
     private void tick(WoolSwapArena arena) {
         if (arena.getState() == WoolSwapGameState.WAITING_FOR_PLAYERS) {
             playMusic(arena);
@@ -75,6 +72,7 @@ public class WoolSwapService {
                 arena.setState(WoolSwapGameState.WAITING_FOR_PLAYERS);
                 setAllColors(arena);
                 openEntrance(arena);
+                resetArena(arena);
                 return;
             }
             if (arena.getState() == WoolSwapGameState.IN_PROGRESS_RUN) {
@@ -177,7 +175,7 @@ public class WoolSwapService {
     }
 
     private void setRemainingRunTime(WoolSwapArena arena) {
-        int startingTime = 10000;
+        int startingTime = 4000;
         int minimalTime = 700;
 
         int currentTime = minimalTime + startingTime * (Math.max(1, 10-arena.getLevel()))/10;
@@ -185,7 +183,7 @@ public class WoolSwapService {
     }
 
     private void setRemainingStandTime(WoolSwapArena arena) {
-        arena.setRemainingStandTime(2000);
+        arena.setRemainingStandTime(3500);
     }
 
     private void startArena(WoolSwapArena arena) {
