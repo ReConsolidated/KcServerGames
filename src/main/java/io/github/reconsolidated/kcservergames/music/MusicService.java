@@ -3,6 +3,7 @@ package io.github.reconsolidated.kcservergames.music;
 import com.xxmicloxx.NoteBlockAPI.model.Playlist;
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
+import com.xxmicloxx.NoteBlockAPI.model.SoundCategory;
 import com.xxmicloxx.NoteBlockAPI.songplayer.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
@@ -46,6 +47,7 @@ public class MusicService implements Listener {
 
     public SongPlayer createPlayer(Location location, int distance) {
         PositionSongPlayer positionSongPlayer = new PositionSongPlayer(playlist);
+        positionSongPlayer.setCategory(SoundCategory.RECORDS);
         positionSongPlayer.setTargetLocation(location);
         positionSongPlayer.setDistance(distance);
         positionSongPlayer.setPlaying(true);

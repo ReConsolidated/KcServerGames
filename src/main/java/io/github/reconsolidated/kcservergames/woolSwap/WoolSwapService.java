@@ -2,7 +2,6 @@ package io.github.reconsolidated.kcservergames.woolSwap;
 
 import io.github.reconsolidated.kcservergames.KcServerGames;
 import io.github.reconsolidated.kcservergames.music.MusicService;
-import io.github.reconsolidated.kcservergames.regions.Region;
 import io.github.reconsolidated.kcservergames.utils.Translations;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
