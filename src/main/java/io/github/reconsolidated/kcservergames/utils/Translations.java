@@ -9,22 +9,22 @@ import java.lang.reflect.Field;
 import static io.github.reconsolidated.kcservergames.utils.Tr.tr;
 
 public class Translations {
-    public static String WHITE = "&fWHITE";
-    public static String ORANGE = "&6ORANGE";
-    public static String MAGENTA = "&dMAGENTA";
-    public static String LIGHT_BLUE = "&9LIGHT_BLUE";
-    public static String YELLOW = "&eYELLOW";
-    public static String LIME = "&aLIME";
-    public static String PINK = "&dPINK";
-    public static String GRAY = "&8GRAY";
-    public static String LIGHT_GRAY = "&7LIGHT_GRAY";
-    public static String CYAN = "&3CYAN";
-    public static String PURPLE = "&5PURPLE";
-    public static String BLUE = "&1BLUE";
-    public static String BROWN = "&6BROWN";
-    public static String GREEN = "&2GREEN";
-    public static String RED = "&cRED";
-    public static String BLACK = "&0BLACK";
+    public static String WHITE = "WHITE";
+    public static String ORANGE = "ORANGE";
+    public static String MAGENTA = "MAGENTA";
+    public static String LIGHT_BLUE = "LIGHT_BLUE";
+    public static String YELLOW = "YELLOW";
+    public static String LIME = "LIME";
+    public static String PINK = "PINK";
+    public static String GRAY = "GRAY";
+    public static String LIGHT_GRAY = "LIGHT_GRAY";
+    public static String CYAN = "CYAN";
+    public static String PURPLE = "PURPLE";
+    public static String BLUE = "BLUE";
+    public static String BROWN = "BROWN";
+    public static String GREEN = "GREEN";
+    public static String RED = "RED";
+    public static String BLACK = "BLACK";
 
     public static String STARTS_IN = "Starts in <time>";
     public static String ARENA_STARTED = "STARTED!";

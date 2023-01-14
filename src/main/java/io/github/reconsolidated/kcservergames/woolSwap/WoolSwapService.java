@@ -4,6 +4,7 @@ import io.github.reconsolidated.kcservergames.KcServerGames;
 import io.github.reconsolidated.kcservergames.music.MusicService;
 import io.github.reconsolidated.kcservergames.utils.Translations;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -55,14 +56,12 @@ public class WoolSwapService {
         }
         else if (arena.getState() == WoolSwapGameState.COUNTING) {
             if (arena.getRemainingCountTime() < 0) {
-                log.info("Remaining count time is less than 0, starting the arena.");
                 startArena(arena);
                 setRemainingRunTime(arena);
                 displayColor(arena);
                 closeEntrance(arena);
                 arena.setState(WoolSwapGameState.IN_PROGRESS_RUN);
             } else {
-                log.info("Remaining count time is %d, doing the counting.".formatted(arena.getRemainingCountTime()));
                 doCounting(arena);
             }
         }
@@ -134,22 +133,22 @@ public class WoolSwapService {
     private void sendColorInfo(WoolSwapArena arena) {
         for (Player player : getPlayersInArena(arena)) {
             switch (arena.getColor()) {
-                case WHITE -> player.showTitle(Title.title(Component.text(Translations.WHITE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case ORANGE -> player.showTitle(Title.title(Component.text(Translations.ORANGE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case MAGENTA -> player.showTitle(Title.title(Component.text(Translations.MAGENTA), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case LIGHT_BLUE -> player.showTitle(Title.title(Component.text(Translations.LIGHT_BLUE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case YELLOW -> player.showTitle(Title.title(Component.text(Translations.YELLOW), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case LIME -> player.showTitle(Title.title(Component.text(Translations.LIME), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case PINK -> player.showTitle(Title.title(Component.text(Translations.PINK), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case GRAY -> player.showTitle(Title.title(Component.text(Translations.GRAY), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case LIGHT_GRAY -> player.showTitle(Title.title(Component.text(Translations.LIGHT_GRAY), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case CYAN -> player.showTitle(Title.title(Component.text(Translations.CYAN), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case PURPLE -> player.showTitle(Title.title(Component.text(Translations.PURPLE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case BLUE -> player.showTitle(Title.title(Component.text(Translations.BLUE), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case BROWN -> player.showTitle(Title.title(Component.text(Translations.BROWN), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case GREEN -> player.showTitle(Title.title(Component.text(Translations.GREEN), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case RED -> player.showTitle(Title.title(Component.text(Translations.RED), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
-                case BLACK -> player.showTitle(Title.title(Component.text(Translations.BLACK), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case WHITE -> player.showTitle(Title.title(Component.text(Translations.WHITE).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case ORANGE -> player.showTitle(Title.title(Component.text(Translations.ORANGE).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case MAGENTA -> player.showTitle(Title.title(Component.text(Translations.MAGENTA).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case LIGHT_BLUE -> player.showTitle(Title.title(Component.text(Translations.LIGHT_BLUE).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case YELLOW -> player.showTitle(Title.title(Component.text(Translations.YELLOW).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case LIME -> player.showTitle(Title.title(Component.text(Translations.LIME).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case PINK -> player.showTitle(Title.title(Component.text(Translations.PINK).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case GRAY -> player.showTitle(Title.title(Component.text(Translations.GRAY).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case LIGHT_GRAY -> player.showTitle(Title.title(Component.text(Translations.LIGHT_GRAY).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case CYAN -> player.showTitle(Title.title(Component.text(Translations.CYAN).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case PURPLE -> player.showTitle(Title.title(Component.text(Translations.PURPLE).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case BLUE -> player.showTitle(Title.title(Component.text(Translations.BLUE).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case BROWN -> player.showTitle(Title.title(Component.text(Translations.BROWN).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case GREEN -> player.showTitle(Title.title(Component.text(Translations.GREEN).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case RED -> player.showTitle(Title.title(Component.text(Translations.RED).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
+                case BLACK -> player.showTitle(Title.title(Component.text(Translations.BLACK).color(TextColor.color(arena.getColor().getRGBColor().asRGB())), Component.empty(), Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(1), Duration.ofSeconds(0))));
             }
         }
     }
